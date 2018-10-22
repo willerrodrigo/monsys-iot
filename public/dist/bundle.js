@@ -3314,7 +3314,6 @@ process.umask = function() { return 0; };
 }(this));
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-
 },{}],10:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -3573,7 +3572,6 @@ exports.clearImmediate = typeof clearImmediate === "function" ? clearImmediate :
   delete immediateIds[id];
 };
 }).call(this,require("timers").setImmediate,require("timers").clearImmediate)
-
 },{"process/browser.js":8,"timers":13}],14:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -4923,7 +4921,6 @@ function hasOwnProperty(obj, prop) {
 }
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-
 },{"./support/isBuffer":16,"_process":8,"inherits":6}],18:[function(require,module,exports){
 //Database
 var db = firebase.database()
@@ -5554,9 +5551,8 @@ function objectToString(o) {
   return Object.prototype.toString.call(o);
 }
 
-}).call(this,{"isBuffer":require("../../../../../AppData/Roaming/npm/node_modules/browserify/node_modules/is-buffer/index.js")})
-
-},{"../../../../../AppData/Roaming/npm/node_modules/browserify/node_modules/is-buffer/index.js":7}],21:[function(require,module,exports){
+}).call(this,{"isBuffer":require("../../../../../../AppData/Roaming/npm/node_modules/browserify/node_modules/is-buffer/index.js")})
+},{"../../../../../../AppData/Roaming/npm/node_modules/browserify/node_modules/is-buffer/index.js":7}],21:[function(require,module,exports){
 'use strict';
 
 var copy             = require('es5-ext/object/copy')
@@ -5893,7 +5889,6 @@ Duplexify.prototype.end = function(data, enc, cb) {
 module.exports = Duplexify
 
 }).call(this,require('_process'),require("buffer").Buffer)
-
 },{"_process":8,"buffer":3,"end-of-stream":24,"inherits":85,"readable-stream":114,"stream-shift":117}],24:[function(require,module,exports){
 var once = require('once');
 
@@ -9798,7 +9793,6 @@ MqttClient.prototype.getLastMessageId = function () {
 module.exports = MqttClient
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-
 },{"./store":99,"./validations":100,"_process":8,"end-of-stream":101,"events":4,"inherits":85,"mqtt-packet":88,"readable-stream":114,"reinterval":115,"xtend":123}],94:[function(require,module,exports){
 (function (process){
 'use strict'
@@ -9952,7 +9946,6 @@ module.exports.MqttClient = MqttClient
 module.exports.Store = Store
 
 }).call(this,require('_process'))
-
 },{"../client":93,"../store":99,"./tcp":95,"./tls":96,"./ws":97,"./wx":98,"_process":8,"url":14,"xtend":123}],95:[function(require,module,exports){
 'use strict'
 var net = require('net')
@@ -10113,7 +10106,6 @@ if (IS_BROWSER) {
 }
 
 }).call(this,require('_process'))
-
 },{"_process":8,"url":14,"websocket-stream":120}],98:[function(require,module,exports){
 'use strict'
 
@@ -10370,7 +10362,6 @@ Store.prototype.close = function (cb) {
 module.exports = Store
 
 }).call(this,require('_process'))
-
 },{"_process":8,"es6-map":73,"readable-stream":114,"xtend":123}],100:[function(require,module,exports){
 'use strict'
 
@@ -10519,7 +10510,6 @@ function nextTick(fn, arg1, arg2, arg3) {
 
 
 }).call(this,require('_process'))
-
 },{"_process":8}],104:[function(require,module,exports){
 module.exports = require('./lib/_stream_duplex.js');
 
@@ -11725,7 +11715,6 @@ function indexOf(xs, x) {
   return -1;
 }
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-
 },{"./_stream_duplex":105,"./internal/streams/BufferList":110,"./internal/streams/destroy":111,"./internal/streams/stream":112,"_process":8,"core-util-is":20,"events":4,"inherits":85,"isarray":113,"process-nextick-args":103,"safe-buffer":116,"string_decoder/":118,"util":2}],108:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -12631,7 +12620,6 @@ Writable.prototype._destroy = function (err, cb) {
   cb(err);
 };
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("timers").setImmediate)
-
 },{"./_stream_duplex":105,"./internal/streams/destroy":111,"./internal/streams/stream":112,"_process":8,"core-util-is":20,"inherits":85,"process-nextick-args":103,"safe-buffer":116,"timers":13,"util-deprecate":119}],110:[function(require,module,exports){
 'use strict';
 
@@ -13319,7 +13307,6 @@ function config (name) {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-
 },{}],120:[function(require,module,exports){
 (function (process,global){
 'use strict'
@@ -13493,7 +13480,6 @@ function WebSocketStream(target, protocols, options) {
 }
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-
 },{"_process":8,"duplexify":23,"readable-stream":114,"safe-buffer":116,"ws":121}],121:[function(require,module,exports){
 
 var ws = null
@@ -13564,5 +13550,4 @@ function extend() {
     return target
 }
 
-},{}]},{},[18])
-//# sourceMappingURL=bundle.map.js
+},{}]},{},[18]);

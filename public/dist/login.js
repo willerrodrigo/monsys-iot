@@ -13,7 +13,6 @@ authEmailPassButton.addEventListener('click', function () {
         .signInWithEmailAndPassword(emailInput.value, passwordInput.value)
         .then(function (result) {
             console.log(result);
-            alert('Autenticado ' + emailInput.value);
             window.location = 'index.html';
         })
         .catch(function (error) {
