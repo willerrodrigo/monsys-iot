@@ -23,6 +23,7 @@
   <!-- Custom styles for this template-->
   <link href="css/sb-admin.css" rel="stylesheet">
   <link href="css/led.css" rel="stylesheet">
+  <link href="css/slider.css" rel="stylesheet">
 
 </head>
 
@@ -89,6 +90,11 @@
                 </h1>
                 <br>
               </div>
+              <div class="led" id="ledVentilador"></div>
+              <div class="row" id="ventRangeDiv">    
+                <input type="range" min="0" max="100" value="50" class="slider" id="ventRange">
+                <h5 id="ventLabel" class="label label-default"></h5>
+              </div>
               <a id="btTemp" class="card-footer text-white clearfix small z-1 btn btn-primary" role="button"></a>
             </div>
           </div>         
@@ -104,6 +110,11 @@
                     <font id="sensorLum" size="20">...</font> <!-- Valor da luminosidade -->
                   </h1>
                 <br>
+              </div>   
+              <div class="led" id="ledLampada"></div>
+              <div class="row" id="lampRangeDiv">
+                <input type="range" min="0" max="100" value="50" class="slider2" id="lampRange">
+                <h5 id="lampLabel" class="label label-default"></h5>
               </div>
               <a id="btLum" class="card-footer text-white clearfix small z-1 btn btn-success" role="button"></a>
             </div>
@@ -121,7 +132,8 @@
                 </h1>
                 <br>
               </div>
-              <a id="btJanela" class="card-footer text-white clearfix small z-1 btn btn-danger" role="button"></a>
+              <div class="led" id="ledJanela"></div>
+              <button id="btJanela" class="card-footer text-white clearfix small z-1 btn btn-danger" role="button"></button>
             </div>
           </div>
           <div class="col-xl-3 col-sm-6 mb-3">
@@ -139,11 +151,6 @@
               </div>
             </div>
           </div>
-        </div>
-        <div class="row">
-          <div class="led" id="ledVentilador"></div>
-          <div class="led" id="ledLampada"></div>
-          <div class="led" id="ledJanela"></div>
         </div>
 
         <!-- Sticky Footer -->
@@ -180,7 +187,7 @@
             Selecione "Sair" abaixo se você estiver pronto para terminar sua sessão atual.</div>
           <div class="modal-footer">
             <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-            <a class="btn btn-primary" id="logOutButton">Sair</a>
+            <button class="btn btn-primary" id="logOutButton">Sair</button>
           </div>
         </div>
       </div>

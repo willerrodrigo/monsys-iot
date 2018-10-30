@@ -4947,14 +4947,32 @@ var logOutButton = document.getElementById('logOutButton');
 var mqtt = require('mqtt');
 var client = mqtt.connect('wss://iot.eclipse.org:443/ws');
 
-client.reconnect()
+
+//SLIDER
+var sliderVent = document.getElementById("ventRange");
+var sliderLamp = document.getElementById("lampRange");
+
+var output = document.getElementById("ventLabel");
+var output2 = document.getElementById("lampLabel");
+
+output.innerHTML = sliderVent.value + '%';
+output2.innerHTML = sliderLamp.value + '%';
+
+sliderVent.oninput = function() {
+  output.innerHTML = this.value + '%';
+}
+
+sliderLamp.oninput = function() {
+  output2.innerHTML = this.value + '%';
+}
 
 firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
         // User is signed in.
         var uid = user.uid;
-        console.log(String(uid))
 
+        client.reconnect()
+        
         client.on("connect", function () {
             client.subscribe('monsys/estadoJanela')
             client.subscribe('monsys/estadoTemperatura')
@@ -5006,9 +5024,9 @@ firebase.auth().onAuthStateChanged(function (user) {
         btJanela.addEventListener('click', function () {
 
             if (btJanela.innerText == "Abrir Janela") {
-                client.publish('monsys/estadoJanela', 'AJ') //Abrir Janela
+                client.publish('monsys/estadoJanela', '1') //Abrir Janela
             } else {
-                client.publish('monsys/estadoJanela', 'FJ')
+                client.publish('monsys/estadoJanela', '0')
             }
         });
 
@@ -5042,11 +5060,11 @@ firebase.auth().onAuthStateChanged(function (user) {
 
         //TEMPERATURA
         btTemp.addEventListener('click', function () {
-
+            
             if (btTemp.innerText == "Ligar Ventilador") {
-                client.publish('monsys/estadoVentilador', 'LV') //Ligar Ventilador
-            } else {
-                client.publish('monsys/estadoVentilador', 'DV')
+                client.publish('monsys/estadoTemperatura', sliderVent.value) //Ligar Ventilador
+            } else {           
+                client.publish('monsys/estadoTemperatura', '0')
             }
 
         });
@@ -5076,10 +5094,12 @@ firebase.auth().onAuthStateChanged(function (user) {
                 btTemp.innerHTML = "Desligar Ventilador"
                 $('#ledVentilador').removeClass()
                 $('#ledVentilador').addClass('led led-green')
+                $("#ventRangeDiv").addClass('disabledbutton', true)
             } else if (estadoVentilador == "Desligado") {
                 btTemp.innerHTML = "Ligar Ventilador"
                 $('#ledVentilador').removeClass()
                 $('#ledVentilador').addClass('led led-red')
+                $("#ventRangeDiv").removeClass('disabledbutton', true)
             }
         })
 
@@ -5087,9 +5107,9 @@ firebase.auth().onAuthStateChanged(function (user) {
         btLum.addEventListener('click', function () {
 
             if (btLum.innerText == "Ligar Lâmpada") {
-                client.publish('monsys/estadoVentilador', 'LLA') //Ligar Lampada
+                client.publish('monsys/estadoLuminosidade', sliderLamp.value) //Ligar Lampada
             } else {
-                client.publish('monsys/estadoVentilador', 'DL')
+                client.publish('monsys/estadoLuminosidade', '0')
             }
         });
 
@@ -5118,10 +5138,12 @@ firebase.auth().onAuthStateChanged(function (user) {
                 btLum.innerHTML = "Desligar Lâmpada"
                 $('#ledLampada').removeClass()
                 $('#ledLampada').addClass('led led-green')
+                $("#lampRangeDiv").addClass('disabledbutton', true)
             } else if (estadoLuz == "Desligado") {
                 btLum.innerHTML = "Ligar Lâmpada"
                 $('#ledLampada').removeClass()
                 $('#ledLampada').addClass('led led-red')
+                $("#lampRangeDiv").removeClass('disabledbutton', true)
             }
         })
 
@@ -5551,8 +5573,8 @@ function objectToString(o) {
   return Object.prototype.toString.call(o);
 }
 
-}).call(this,{"isBuffer":require("../../../../../../AppData/Roaming/npm/node_modules/browserify/node_modules/is-buffer/index.js")})
-},{"../../../../../../AppData/Roaming/npm/node_modules/browserify/node_modules/is-buffer/index.js":7}],21:[function(require,module,exports){
+}).call(this,{"isBuffer":require("../../../../../../AppData/Roaming/npm/node_modules/watchify/node_modules/is-buffer/index.js")})
+},{"../../../../../../AppData/Roaming/npm/node_modules/watchify/node_modules/is-buffer/index.js":7}],21:[function(require,module,exports){
 'use strict';
 
 var copy             = require('es5-ext/object/copy')
