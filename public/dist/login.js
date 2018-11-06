@@ -12,6 +12,16 @@ firebase.auth().onAuthStateChanged(function (user) {
     }else
         // Autenticar com E-mail e Senha
         authEmailPassButton.addEventListener('click', function () {
+
+            if(emailInput.value.length < 4) {
+                alert('Por favor entre com um email.');
+                return;
+            }
+            else if(passwordInput.value.length < 4) {
+                alert('Por favor entre com a senha.');
+                return;
+            }
+
             firebase
                 .auth()
                 .signInWithEmailAndPassword(emailInput.value, passwordInput.value)
@@ -19,9 +29,10 @@ firebase.auth().onAuthStateChanged(function (user) {
                     console.log(result);
                 })
                 .catch(function (error) {
-                    console.error(error.code);
-                    console.error(error.message);
-                    alert('Falha ao autenticar, verifique o erro no console.')
+                    if(error.code == "auth/wrong-password")
+                        alert("Senha incorreta ou o usuário não está cadastrado.")
+                    else if(error.code == "auth/invalid-email")
+                        alert("O email inserido não existe.")
                 });
         });
 });

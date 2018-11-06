@@ -4974,36 +4974,41 @@ firebase.auth().onAuthStateChanged(function (user) {
         client.reconnect()
         
         client.on("connect", function () {
-            client.subscribe('monsys/estadoJanela')
-            client.subscribe('monsys/estadoTemperatura')
-            client.subscribe('monsys/estadoLuminosidade')
-            client.subscribe('monsys/estadoUmidade')
+            client.subscribe('monsys/Janela')
+
+            client.subscribe('monsys/Temperatura')
+            client.subscribe('estado/Ventilador')
+
+            client.subscribe('monsys/Luminosidade')
+            client.subscribe('estado/Lampada')
+
+            client.subscribe('monsys/Umidade')
             console.log("connected");
         })
 
         client.on('message', (topic, message) => {
 
             switch (topic) {
-                case 'monsys/estadoJanela':
+                case 'monsys/Janela':
                     if (message.toString() == "JF") //Janela Fechada
                         createJan('Fechada')
                     else if (message.toString() == "JA")
                         createJan('Aberta')
                     break
-                case 'monsys/estadoTemperatura':
-                    if (message.toString().endsWith('VD')) //Ventilador Desligado
-                        createTemp(message)
-                    else if (message.toString().endsWith('VL'))
+                case 'monsys/Temperatura':
                         createTemp(message)
                     break
-                case 'monsys/estadoLuminosidade':
-                    if (message.toString().endsWith('LD')) //Lampada Desligada
-                        createLum(message)
-                    else if (message.toString().endsWith('LL'))
+                case 'monsys/Luminosidade':
                         createLum(message)
                     break
-                case 'monsys/estadoUmidade':
-                    createUmidade(message)
+                case 'monsys/Umidade':
+                        createUmidade(message)
+                    break
+                case 'estado/Ventilador':
+                        createVent(message)
+                    break
+                case 'estado/Lampada':
+                        createLamp(message)
                     break
             }
         })
@@ -5020,13 +5025,29 @@ firebase.auth().onAuthStateChanged(function (user) {
             console.log("reconnecting")
         })
 
+
+        //TEMPERATURA
+        function createTemp(message) {
+            var data = {
+                valor: message.toString(),
+                time: Date.now()
+            }
+
+            return db.ref().child('usuarios/'+uid+'/dados/temperatura').push(data);
+        }
+
+        db.ref('usuarios/'+uid+'/dados/temperatura').on('child_added', function (snapshot) {
+
+            temperatura.innerHTML = snapshot.val().valor + "ºC";
+        })
+
         //JANELA
         btJanela.addEventListener('click', function () {
 
             if (btJanela.innerText == "Abrir Janela") {
-                client.publish('monsys/estadoJanela', '1') //Abrir Janela
+                client.publish('monsys/Janela', 'AJ') //Abrir Janela
             } else {
-                client.publish('monsys/estadoJanela', '0')
+                client.publish('monsys/Janela', 'FJ')
             }
         });
 
@@ -5058,44 +5079,36 @@ firebase.auth().onAuthStateChanged(function (user) {
         })
 
 
-        //TEMPERATURA
+        //VENTILADOR
         btTemp.addEventListener('click', function () {
             
             if (btTemp.innerText == "Ligar Ventilador") {
-                client.publish('monsys/estadoTemperatura', sliderVent.value) //Ligar Ventilador
+                client.publish('monsys/Ventilador', sliderVent.value) //Ligar Ventilador
             } else {           
-                client.publish('monsys/estadoTemperatura', '0')
+                client.publish('monsys/Ventilador', '0')
             }
 
         });
 
-        function createTemp(message) {
-
-            var splittedMessage = String(message).split("/");
-            var estado = splittedMessage[1] == 'VD' ? 'Desligado' : 'Ligado'
-            var valor = splittedMessage[0]
-
+        function createVent(valor) {
             var data = {
-                estado: estado,
-                valor: valor,
+                valor: valor.toString(),
                 time: Date.now()
             }
 
-            return db.ref().child('usuarios/'+uid+'/dados/temperatura').push(data);
+            return db.ref().child('usuarios/'+uid+'/dados/ventilador').push(data);
         }
 
-        //ESTADO DA TEMPERATURA
-        db.ref('usuarios/'+uid+'/dados/temperatura').on('child_added', function (snapshot) {
+        db.ref('usuarios/'+uid+'/dados/ventilador').on('child_added', function (snapshot) {
 
-            var estadoVentilador = snapshot.val().estado
-            temperatura.innerHTML = snapshot.val().valor + "ºC";
+            const estadoVentilador = snapshot.val().valor
 
-            if (estadoVentilador == "Ligado") {
+            if (estadoVentilador > 0) {
                 btTemp.innerHTML = "Desligar Ventilador"
                 $('#ledVentilador').removeClass()
                 $('#ledVentilador').addClass('led led-green')
                 $("#ventRangeDiv").addClass('disabledbutton', true)
-            } else if (estadoVentilador == "Desligado") {
+            } else {
                 btTemp.innerHTML = "Ligar Ventilador"
                 $('#ledVentilador').removeClass()
                 $('#ledVentilador').addClass('led led-red')
@@ -5103,48 +5116,55 @@ firebase.auth().onAuthStateChanged(function (user) {
             }
         })
 
-        // LUMINOSIDADE
+        //LAMPADA
         btLum.addEventListener('click', function () {
 
-            if (btLum.innerText == "Ligar Lâmpada") {
-                client.publish('monsys/estadoLuminosidade', sliderLamp.value) //Ligar Lampada
+            if (btLum.innerText == "Acender Lâmpada") {
+                client.publish('monsys/Lampada', sliderLamp.value) //Ligar Lampada
             } else {
-                client.publish('monsys/estadoLuminosidade', '0')
+                client.publish('monsys/Lampada', '0')
             }
         });
 
-        function createLum(message) {
-
-            var splittedMessage = String(message).split("/");
-            var estado = splittedMessage[1] == 'LD' ? 'Desligado' : 'Ligado'
-            var valor = splittedMessage[0]
-
+        function createLamp(message) {
             var data = {
-                estado: estado,
-                valor: valor,
+                valor: message.toString(),
+                time: Date.now()
+            }
+
+            return db.ref().child('usuarios/'+uid+'/dados/lampada').push(data);
+        }
+
+        db.ref('usuarios/'+uid+'/dados/lampada').on('child_added', function (snapshot) {
+
+            var estadoLuz = snapshot.val().estado
+
+            if (estadoLuz > 0) {
+                btLum.innerHTML = "Apagar Lâmpada"
+                $('#ledLampada').removeClass()
+                $('#ledLampada').addClass('led led-green')
+                $("#lampRangeDiv").addClass('disabledbutton', true)
+            } else {
+                btLum.innerHTML = "Acender Lâmpada"
+                $('#ledLampada').removeClass()
+                $('#ledLampada').addClass('led led-red')
+                $("#lampRangeDiv").removeClass('disabledbutton', true)
+            }
+        })
+
+        // LUMINOSIDADE
+        function createLum(message) {
+            var data = {
+                valor: message.toString(),
                 time: Date.now()
             }
 
             return db.ref().child('usuarios/'+uid+'/dados/luminosidade').push(data);
         }
 
-        //ESTADO DA LUMINOSIDADE
         db.ref('usuarios/'+uid+'/dados/luminosidade').on('child_added', function (snapshot) {
 
-            var estadoLuz = snapshot.val().estado
             luminosidade.innerHTML = snapshot.val().valor + "%";
-
-            if (estadoLuz == "Ligado") {
-                btLum.innerHTML = "Desligar Lâmpada"
-                $('#ledLampada').removeClass()
-                $('#ledLampada').addClass('led led-green')
-                $("#lampRangeDiv").addClass('disabledbutton', true)
-            } else if (estadoLuz == "Desligado") {
-                btLum.innerHTML = "Ligar Lâmpada"
-                $('#ledLampada').removeClass()
-                $('#ledLampada').addClass('led led-red')
-                $("#lampRangeDiv").removeClass('disabledbutton', true)
-            }
         })
 
         // UMIDADE
@@ -5573,8 +5593,8 @@ function objectToString(o) {
   return Object.prototype.toString.call(o);
 }
 
-}).call(this,{"isBuffer":require("../../../../../../AppData/Roaming/npm/node_modules/watchify/node_modules/is-buffer/index.js")})
-},{"../../../../../../AppData/Roaming/npm/node_modules/watchify/node_modules/is-buffer/index.js":7}],21:[function(require,module,exports){
+}).call(this,{"isBuffer":require("../../../../../../../AppData/Roaming/npm/node_modules/browserify/node_modules/is-buffer/index.js")})
+},{"../../../../../../../AppData/Roaming/npm/node_modules/browserify/node_modules/is-buffer/index.js":7}],21:[function(require,module,exports){
 'use strict';
 
 var copy             = require('es5-ext/object/copy')

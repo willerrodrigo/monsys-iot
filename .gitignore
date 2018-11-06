@@ -2,4 +2,3 @@ node_modules
 .vscode
 .firebase
 .firebaserc
-package-lock.json
