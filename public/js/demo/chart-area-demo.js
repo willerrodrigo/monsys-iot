@@ -2,28 +2,27 @@ Chart.defaults.global.defaultFontFamily = '-apple-system,system-ui,BlinkMacSyste
 Chart.defaults.global.defaultFontColor = '#292b2c';
 
 const db = firebase.database()
-var values = [];
-var myLineChart;
-
 const logOutButton = document.getElementById('logOutButton');
 
 firebase.auth().onAuthStateChanged(function (user) {
   if (user) {
 
     //Firebase
-    db.ref('usuarios/' + user.uid + '/dados/temperatura').limitToLast(10).once('value').then(function (snapshot) {
+    db.ref('usuarios/' + user.uid + '/dados/temperatura').limitToLast(12).once('value').then(function (snapshot) {
+
+      var values = [];
 
       snapshot.forEach(value => {
         values.push(value.val().valor)
       })
 
-      var ctx = document.getElementById("myAreaChart");
-      myLineChart = new Chart(ctx, {
+      var ctx = document.getElementById("temperaturaChart");
+      var myLineChart = new Chart(ctx, {
         type: 'line',
         data: {
-          labels: ["", "", "", "", "", "", "", "", "", ""],
+          labels: ["00:00", "02:00", "04:00", "06:00", "08:00", "10:00", "12:00", "14:00", "16:00", "18:00", "20:00", "22:00"],
           datasets: [{
-            label: "Sessions",
+            label: "Celsius",
             lineTension: 0.3,
             backgroundColor: "rgba(2,117,216,0.2)",
             borderColor: "rgba(2,117,216,1)",
@@ -53,7 +52,67 @@ firebase.auth().onAuthStateChanged(function (user) {
             yAxes: [{
               ticks: {
                 min: 0,
-                max: 50,
+                max: 100,
+                maxTicksLimit: 5
+              },
+              gridLines: {
+                color: "rgba(0, 0, 0, .125)",
+              }
+            }],
+          },
+          legend: {
+            display: false
+          }
+        }
+      });
+
+    })
+
+    db.ref('usuarios/' + user.uid + '/dados/umidade').limitToLast(12).once('value').then(function (snapshot) {
+
+      var values = [];
+
+      snapshot.forEach(value => {
+        values.push(value.val().valor)
+      })
+
+      var ctx = document.getElementById("umidadeChart");
+      var myLineChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: ["00:00", "02:00", "04:00", "06:00", "08:00", "10:00", "12:00", "14:00", "16:00", "18:00", "20:00", "22:00"],
+          datasets: [{
+            label: "Percentual",
+            lineTension: 0.3,
+            backgroundColor: "rgba(2,117,216,0.2)",
+            borderColor: "rgba(2,117,216,1)",
+            pointRadius: 5,
+            pointBackgroundColor: "rgba(2,117,216,1)",
+            pointBorderColor: "rgba(255,255,255,0.8)",
+            pointHoverRadius: 5,
+            pointHoverBackgroundColor: "rgba(2,117,216,1)",
+            pointHitRadius: 50,
+            pointBorderWidth: 2,
+            data: values,
+          }],
+        },
+        options: {
+          scales: {
+            xAxes: [{
+              time: {
+                unit: 'date'
+              },
+              gridLines: {
+                display: false
+              },
+              ticks: {
+                maxTicksLimit: 7
+              }
+            }],
+            yAxes: [{
+              ticks: {
+                min: 0,
+                max: 100,
                 maxTicksLimit: 5
               },
               gridLines: {

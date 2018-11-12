@@ -31,7 +31,7 @@ firebase.auth().onAuthStateChanged(function (user) {
                 .catch(function (error) {
                     if(error.code == "auth/wrong-password")
                         alert("Senha incorreta ou o usuário não está cadastrado.")
-                    else if(error.code == "auth/invalid-email")
+                    else /* if(error.code == "auth/invalid-email") */
                         alert("O email inserido não existe.")
                 });
         });

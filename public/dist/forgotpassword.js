@@ -1,10 +1,11 @@
 function sendPasswordReset() {
     var email = document.getElementById('inputEmail').value;
+    console.log(email)
     // [START sendpasswordemail]
     firebase.auth().sendPasswordResetEmail(email).then(function() {
       // Password Reset Email Sent!
       // [START_EXCLUDE]
-      alert('Password Reset Email Sent!');
+      alert('E-mail de redefinição de senha enviado!');
       // [END_EXCLUDE]
     }).catch(function(error) {
       // Handle Errors here.
@@ -12,9 +13,9 @@ function sendPasswordReset() {
       var errorMessage = error.message;
       // [START_EXCLUDE]
       if (errorCode == 'auth/invalid-email') {
-        alert(errorMessage);
+        alert('Email Invalido');
       } else if (errorCode == 'auth/user-not-found') {
-        alert(errorMessage);
+        alert('Email não encontrado');
       }
       console.log(error);
       // [END_EXCLUDE]

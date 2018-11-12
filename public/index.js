@@ -42,6 +42,10 @@ sliderLamp.oninput = function() {
   output2.innerHTML = this.value + '%';
 }
 
+//7200000 2 horas
+//60000 1 minuto
+const TWO_HOUR = 60000
+
 firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
         // User is signed in.
@@ -101,15 +105,39 @@ firebase.auth().onAuthStateChanged(function (user) {
             console.log("reconnecting")
         })
 
+        function elapsed(date) {
+            const then = new Date(date)
+            const now = new Date(Date.now())
+            return now.getTime() - then.getTime()
+        }
+
+        function isHourValid(snapshot) {
+            return (
+                snapshot.exists() &&
+                elapsed(snapshot.val().date) < TWO_HOUR
+            )
+        }
 
         //TEMPERATURA
         function createTemp(message) {
+
+            temperatura.innerHTML = message.toString() + "ºC";
+
             var data = {
                 valor: message.toString(),
-                time: Date.now()
+                time: new Date(Date.now()).toISOString(),
             }
 
-            return db.ref().child('usuarios/'+uid+'/dados/temperatura').push(data);
+            db.ref().child('usuarios/'+uid+'/dados/data').once('value').then(snapshot => {
+                if (isHourValid(snapshot)) {
+                    return;
+                }
+
+                db.ref().child('usuarios/'+uid+'/dados/temperatura').push(data);
+                db.ref().child('usuarios/'+uid+'/dados/data').set({
+                    date: new Date(Date.now()).toISOString()
+                });
+            })    
         }
 
         db.ref('usuarios/'+uid+'/dados/temperatura').on('child_added', function (snapshot) {
@@ -213,9 +241,9 @@ firebase.auth().onAuthStateChanged(function (user) {
 
         db.ref('usuarios/'+uid+'/dados/lampada').on('child_added', function (snapshot) {
 
-            var estadoLuz = snapshot.val().estado
-
-            if (estadoLuz > 0) {
+            var estadoLampada = snapshot.val().valor
+            
+            if (estadoLampada > 0) {
                 btLum.innerHTML = "Apagar Lâmpada"
                 $('#ledLampada').removeClass()
                 $('#ledLampada').addClass('led led-green')
@@ -230,12 +258,24 @@ firebase.auth().onAuthStateChanged(function (user) {
 
         // LUMINOSIDADE
         function createLum(message) {
+
+            luminosidade.innerHTML = message.toString() + "%";
+
             var data = {
                 valor: message.toString(),
-                time: Date.now()
+                time: new Date(Date.now()).toISOString(),
             }
 
-            return db.ref().child('usuarios/'+uid+'/dados/luminosidade').push(data);
+            db.ref().child('usuarios/'+uid+'/dados/data').once('value').then(snapshot => {
+                if (isHourValid(snapshot)) {
+                    return;
+                }
+
+                db.ref().child('usuarios/'+uid+'/dados/luminosidade').push(data);
+                db.ref().child('usuarios/'+uid+'/dados/data').set({
+                    date: new Date(Date.now()).toISOString()
+                });
+            }) 
         }
 
         db.ref('usuarios/'+uid+'/dados/luminosidade').on('child_added', function (snapshot) {
@@ -244,20 +284,31 @@ firebase.auth().onAuthStateChanged(function (user) {
         })
 
         // UMIDADE
-        function createUmidade(valor) {
+        function createUmidade(message) {
+
+            umidade.innerHTML = message.toString() + "%"
+
             var data = {
-                valor: valor.toString(),
-                time: Date.now()
+                valor: message.toString(),
+                time: new Date(Date.now()).toISOString(),
             }
 
-            return db.ref().child('usuarios/'+uid+'/dados/umidade').push(data);
+            db.ref().child('usuarios/'+uid+'/dados/data').once('value').then(snapshot => {
+                if (isHourValid(snapshot)) {
+                    return;
+                }
+
+                db.ref().child('usuarios/'+uid+'/dados/umidade').push(data);
+                db.ref().child('usuarios/'+uid+'/dados/data').set({
+                    date: new Date(Date.now()).toISOString()
+                });
+            }) 
         }
 
         //ESTADO DA UMIDADE
         db.ref('usuarios/'+uid+'/dados/umidade').on('child_added', function (snapshot) {
 
             umidade.innerHTML = snapshot.val().valor + "%"
-
         })
 
         // Logout
