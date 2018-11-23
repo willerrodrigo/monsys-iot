@@ -1,11 +1,14 @@
+document.getElementById('resetarSenha')
+        .addEventListener('click', sendPasswordReset);
+
 function sendPasswordReset() {
-    var email = document.getElementById('inputEmail').value;
-    console.log(email)
+    var email = document.getElementById('inputEmail');
     // [START sendpasswordemail]
-    firebase.auth().sendPasswordResetEmail(email).then(function() {
+    firebase.auth().sendPasswordResetEmail(email.value).then(function() {
       // Password Reset Email Sent!
       // [START_EXCLUDE]
       alert('E-mail de redefinição de senha enviado!');
+      email.value = ""
       // [END_EXCLUDE]
     }).catch(function(error) {
       // Handle Errors here.
